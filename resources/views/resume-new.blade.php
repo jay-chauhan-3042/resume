@@ -312,14 +312,11 @@
                                     <i data-feather="twitch"></i>
                                 </div>
                                 <div class="content">
-                                    <h4 class="title"><a href="#">Mobile App</a></h4>
+                                    <h4 class="title">Mobile App</h4>
                                     <p class="description">Creating innovative mobile apps that elevate user
                                         experiences and drive engagement.</p>
-                                    <a class="read-more-button" href="#"><i
-                                            class="feather-arrow-right"></i></a>
                                 </div>
                             </div>
-                            <a class="over-link" href="#"></a>
                         </div>
                     </div>
                     <!-- End SIngle Service -->
@@ -332,14 +329,11 @@
                                     <i data-feather="wifi"></i>
                                 </div>
                                 <div class="content">
-                                    <h4 class="title"><a href="#">Rest Apis</a></h4>
+                                    <h4 class="title">Rest Apis</h4>
                                     <p class="description">Building secure and reliable REST APIs to power your
                                         applications with seamless data integration.</p>
-                                    <a class="read-more-button" href="#"><i
-                                            class="feather-arrow-right"></i></a>
                                 </div>
                             </div>
-                            <a class="over-link" href="#"></a>
                         </div>
                     </div>
                     <!-- End SIngle Service -->
@@ -352,14 +346,11 @@
                                     <i data-feather="slack"></i>
                                 </div>
                                 <div class="content">
-                                    <h4 class="title"><a href="#">Desktop Applications</a></h4>
+                                    <h4 class="title">Desktop Applications</h4>
                                     <p class="description"> Designing efficient and scalable desktop applications for
                                         enhanced productivity and performance.</p>
-                                    <a class="read-more-button" href="#"><i
-                                            class="feather-arrow-right"></i></a>
                                 </div>
                             </div>
-                            <a class="over-link" href="#"></a>
                         </div>
                     </div>
                     <!-- End SIngle Service -->
