@@ -18,7 +18,7 @@ class ContactController extends BaseController
     {
         $name = $request->input("name");
         $email = $request->input("email");
-        $mobileNumber = $request->input("phoneNumber");
+        $mobileNumber = $request->input("contact-phone");
         $subject = $request->input("subject");
         $message = $request->input("message");
 
