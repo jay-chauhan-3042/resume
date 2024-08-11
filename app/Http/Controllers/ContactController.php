@@ -2,15 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\DefaultMessage;
 use App\Models\Contact;
-use App\Models\Links;
-use App\Models\PersonalDetails;
-use App\Services\AisensyService;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Http;
 
 class ContactController extends BaseController
 {
@@ -22,31 +18,34 @@ class ContactController extends BaseController
         $subject = $request->input("subject");
         $message = $request->input("message");
 
-        $personalData = PersonalDetails::where("pdStatus", "!=", "0")->pluck("pdValue", "pdTitle")->all();
-        $links = Links::select("linkAddress", "linkName")->pluck("linkAddress", "linkName")->all();
-        $customData = array(
-            "subject" => "Thank You!",
-            "message" => $subject,
-            "to" => $email,
-            "name" => $name,
-            "address1" => $personalData["address-apt"],
-            "address2" => $personalData["address-area"] . ", " . $personalData["address-city"],
-            "address3" => $personalData["address-state"] . ", " . $personalData["address-country-short"] . " - " . $personalData["address-pin"] . ".",
-            "phone" => $personalData["phone1"],
-            "linkedinLink" => $links["Linkedin"],
-            "twitterLink" => $links["Twitter"],
-            "whatsappLink" => $links["Whatsapp"],
-            "instagramLink" => $links["Instagram"],
-            "email" => $personalData["email"]
-        );
-
-        $whatsappClient = new AisensyService();
-        $whatsappResponse = $whatsappClient->sendQuickMessage("91", $mobileNumber, "quick_reply", $name, $subject);
+        $whatsappResponse = Http::withHeaders([
+            'authorization' => 'Bearer 76ae62e5e0587463000ec1613174c82d39b6b34303e446e013547baa47011cb99308692840de5b06e3444c777fa767419f5287665b9869b49dbd87379b854a3b',
+            'Accept' => 'application/json',
+        ])->post('https://api.dj-jay.in/v1/whatsapp/send', [
+            'whatsappNumber' => $mobileNumber,
+            'name' => $name,
+            'templateName' => "quick_reply",
+            'templateData' => [$name, $subject],
+        ]);
         Log::channel("whatsapp")->info("Fallback Details: " . json_encode($whatsappResponse));
-        Mail::to($email)->send(new DefaultMessage($customData));
+
+        $mailContent = "<p>Thank you for reaching out and for your message regarding the <strong>\"" . $subject . "\"</strong>. I wanted to let you know that I have received your communication and am currently reviewing the details.</p><p>Your message is important to me, and I will make it a priority to respond as soon as possible. Please rest assured that I will address your query with the attention it deserves and get back to you at my earliest convenience.</p><p>In the meantime, if you have any additional questions or need further assistance, do not hesitate to get in touch. Your satisfaction is important, and I’m here to help with any concerns you may have.</p><p>Thank you once again for contacting me. I look forward to connecting with you soon.</p>";
+
+        $whatsappResponse = Http::withHeaders([
+            'authorization' => 'Bearer 76ae62e5e0587463000ec1613174c82d39b6b34303e446e013547baa47011cb99308692840de5b06e3444c777fa767419f5287665b9869b49dbd87379b854a3b',
+            'Accept' => 'application/json',
+        ])->post('https://api.dj-jay.in/v1/email/sendEmail', [
+            'name' => $name,
+            'to' => $email,
+            'subject' => "Acknowledgment of Your Message Regarding the \"" . $subject . "\" – We'll Be in Touch Soon",
+            'title' => "Thank you!",
+            'content' => $mailContent,
+        ]);
+
         $insert = array(
             "name" => $name,
             "email" => $email,
+            "contactNumber" => $mobileNumber,
             "subject" => $subject,
             "message" => $message,
             "mailSent" => "1"
